@@ -172,7 +172,7 @@ git submodule update --remote --merge
 pnpm run sync-content
 ```
 
-### 部署时自动同步
+### 部署时显式同步
 
 在 CI/CD 配置中添加:
 
@@ -180,6 +180,7 @@ pnpm run sync-content
 - name: Sync Content
   run: pnpm run sync-content
   env:
+    ENABLE_CONTENT_SYNC: true
     CONTENT_REPO_URL: ${{ secrets.CONTENT_REPO_URL }}
     USE_SUBMODULE: true
 ```

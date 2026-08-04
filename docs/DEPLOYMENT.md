@@ -239,6 +239,17 @@ USE_SUBMODULE=true
 
 ## ☁️ Cloudflare Pages 部署
 
+Mizuki 官方文档：[《Cloudflare Pages 部署》](https://docs.mizuki.mysqil.com/guide/deploy/Cloudflare/)
+
+### 本仓库当前状态
+
+- 生产分支：`master`
+- 生产域名：[blog.whitebaka.com](https://blog.whitebaka.com/)
+- 内容模式：本地内容（`ENABLE_CONTENT_SYNC=false`）
+- 构建命令：`pnpm build`
+- 输出目录：`dist`
+- 2026-08-04 核验：自定义域名返回 Cloudflare HTTP 200，页面标题为“白玖的笔记 - 科技、摄影、活动记录”。
+
 ### 部署步骤
 
 1. **连接仓库**:
@@ -260,6 +271,12 @@ CONTENT_REPO_URL=https://github.com/your-username/Mizuki-Content.git
 USE_SUBMODULE=false  # ⚠️ Cloudflare Pages 默认不支持 submodule
 ```
 
+使用内容分离时，将 Cloudflare 构建命令改为：
+
+```bash
+pnpm run sync-content && pnpm build
+```
+
 ### 注意事项
 
 ⚠️ Cloudflare Pages 默认不支持 Git Submodule，建议:
@@ -268,34 +285,26 @@ USE_SUBMODULE=false  # ⚠️ Cloudflare Pages 默认不支持 submodule
 
 ---
 
-## 🔄 自动同步机制
+## 🔄 内容同步机制
 
-所有部署平台都使用相同的自动同步机制：
+内容同步不再由 `predev` 或 `prebuild` 隐式触发。只有显式执行以下命令才会访问和更新内容仓库：
 
-```json
-// package.json
-{
-  "scripts": {
-    "prebuild": "node scripts/sync-content.js || true"
-  }
-}
+```bash
+pnpm run sync-content
 ```
 
-**工作原理**:
-1. `pnpm build` 执行前自动运行 `prebuild` 钩子
-2. 检查 `ENABLE_CONTENT_SYNC` 环境变量
-3. 如果为 `true`，从远程仓库同步内容到 `src/content/` 和 `public/images/`
-4. 如果为 `false` 或未设置，跳过同步，使用本地内容
-5. `|| true` 确保同步失败不会中断构建
+同步脚本会要求 `ENABLE_CONTENT_SYNC=true` 和 `CONTENT_REPO_URL`，并且：
 
-**优势**:
-- ✅ 统一的构建命令，无需修改配置
-- ✅ 自动兼容所有部署模式
-- ✅ 同步失败不影响构建（回退到本地内容）
+- 内容仓库存在未提交修改时拒绝更新。
+- 只允许快进到当前分支的远程版本，不执行强制重置。
+- 不会在主仓库中自动 `git add` 或创建提交。
+- 同步失败会以非零状态退出，防止部署静默使用过期内容。
 
 ---
 
 ## 🔍 故障排查
+
+Cloudflare 构建失败时，先查看 Pages 的构建日志，并参考 Mizuki 官方文档的 [“构建失败怎么办”](https://docs.mizuki.mysqil.com/guide/deploy/Cloudflare/#q-%E6%9E%84%E5%BB%BA%E5%A4%B1%E8%B4%A5%E6%80%8E%E4%B9%88%E5%8A%9E)。
 
 ### 问题 1: 部署失败 - "未设置 CONTENT_REPO_URL"
 
@@ -349,10 +358,6 @@ ENABLE_CONTENT_SYNC=true
 CONTENT_REPO_URL=https://github.com/your-username/Mizuki-Content.git
 USE_SUBMODULE=false  # 改为 false
 ```
-
-**解决方案 C: 自动降级 (v1.1+)**
-
-`sync-content.js` 会自动检测此冲突并降级到独立仓库模式,无需手动干预。
 
 ### 问题 4: Submodule 克隆失败
 

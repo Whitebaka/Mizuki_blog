@@ -121,7 +121,8 @@ CONTENT_REPO_URL=https://github.com/your-username/Mizuki-Content.git
 
 **工作流程**:
 ```bash
-# 自动同步内容后启动
+# 先显式同步内容，再启动开发服务器
+pnpm run sync-content
 pnpm dev
 
 # 内容在独立仓库编辑
@@ -324,12 +325,13 @@ CONTENT_REPO_URL=https://YOUR_TOKEN@github.com/your-username/Mizuki-Content-Priv
 
 ### 快速配置
 
-所有部署平台都使用相同的自动同步机制:
-- ✅ `pnpm build` 执行前自动运行 `prebuild` 钩子
-- ✅ 根据 `ENABLE_CONTENT_SYNC` 决定是否同步内容
-- ✅ 同步失败不会中断构建,回退到本地内容
+内容同步需要显式执行，不会在 `pnpm dev` 或 `pnpm build` 前隐式运行。在 CI/CD 平台配置环境变量后，使用以下构建命令：
 
-**只需配置环境变量,无需修改构建命令!**
+```bash
+pnpm run sync-content && pnpm build
+```
+
+这样同步失败会直接中断构建，不会静默发布过期内容。
 
 ### 环境变量配置
 
@@ -368,17 +370,15 @@ CONTENT_REPO_URL=https://YOUR_TOKEN@github.com/your-username/Mizuki-Content-Priv
 | `pnpm run init-content` | 运行交互式初始化向导 |
 | `pnpm run sync-content` | 手动同步内容仓库 |
 | `pnpm run check-env` | 检查环境变量配置 |
-| `pnpm dev` | 启动开发服务器 (自动同步) |
-| `pnpm build` | 构建项目 (自动同步) |
+| `pnpm dev` | 启动开发服务器（不会同步内容） |
+| `pnpm build` | 构建项目（不会同步内容） |
 
-### 自动同步时机
+### 安全同步规则
 
-当 `ENABLE_CONTENT_SYNC=true` 时,以下命令会自动同步内容:
-
-- `pnpm dev` - 开发前自动同步
-- `pnpm build` - 构建前自动同步
-
-同步失败不会中断开发,会显示警告并继续。
+- 只有 `ENABLE_CONTENT_SYNC=true` 时才会执行远程操作。
+- 内容仓库存在未提交修改时会立即停止。
+- 远程更新必须能够快进合并，脚本不会执行 `reset --hard`。
+- 主仓库的变更由使用者检查后手动提交。
 
 ---
 
