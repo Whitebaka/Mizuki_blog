@@ -71,6 +71,7 @@ async function main() {
 	const envContent = `# Mizuki 内容仓库配置
 # 由初始化脚本自动生成
 
+ENABLE_CONTENT_SYNC=true
 CONTENT_REPO_URL=${repoUrl.trim()}
 CONTENT_DIR=./content
 `;
@@ -85,6 +86,7 @@ CONTENT_DIR=./content
 			cwd: rootDir,
 			env: {
 				...process.env,
+				ENABLE_CONTENT_SYNC: "true",
 				CONTENT_REPO_URL: repoUrl.trim(),
 			},
 		});
