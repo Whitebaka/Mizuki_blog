@@ -13,22 +13,22 @@ export const profileConfig: ProfileConfig = {
 		{
 			name: "Bilibili",
 			icon: "fa7-brands:bilibili",
-			url: "https://space.bilibili.com/701864046",
+			url: "https://space.bilibili.com/307200",
 		},
 		{
 			name: "Weibo",
 			icon: "fa7-brands:weibo",
-			url: "https://gitee.com/matsuzakayuki",
+			url: "https://weibo.com/u/7896645956",
 		},
 		{
 			name: "RedNote",
 			icon: "simple-icons:xiaohongshu",
-			url: "https://codeberg.org",
+			url: "https://www.xiaohongshu.com/user/profile/6535e130000000000301dbc5?xsec_token=ABWfxUD07IFxJwf_-x2eRHe9l9VVSR1Mo_XSht1zr8ytc=&xsec_source=pc_note",
 		},
 		{
 			name: "GitHub",
 			icon: "fa7-brands:github",
-			url: "https://github.com/matsuzaka-yuki",
+			url: "https://github.com/Whitebaka",
 		},
 	],
 };
