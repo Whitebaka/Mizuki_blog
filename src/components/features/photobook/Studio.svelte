@@ -236,7 +236,7 @@ function exportBrief() {
 </script>
 
 <div class="studio">
-	<header class="studio-heading"><div><a href="/books/">← 写真集</a><p class="book-eyebrow">PHOTOBOOK STUDIO</p><h1>编排工作台</h1><p>{book.title} · 草稿 r{book.revision}</p></div><a class="studio-btn" href={`/books/${book.id}/`}>查看源版本 ↗</a></header>
+	<header class="studio-heading"><div><a href="/books/">← 写真集</a><p class="book-eyebrow">写真集 / 编排</p><h1>编排工作台</h1><p>{book.title} · 草稿 r{book.revision}</p></div><a class="studio-btn" href={`/books/${book.id}/`}>查看源版本 ↗</a></header>
 	<p class="studio-note">修改仅保存到此浏览器。导出草稿可备份或交回更新样册；不会直接发布。锁定可保护单元内容和位置。</p>
 	<div class="studio-toolbar">
 		<button onclick={()=>undo()} disabled={!past.length}>撤销</button><button onclick={()=>undo(true)} disabled={!future.length}>重做</button>
@@ -280,7 +280,7 @@ function exportBrief() {
 			<button class="studio-remove" disabled={page.locked || book.pages.length===1} onclick={remove}>移除此单元</button>
 		</aside>
 	</div>
-	<section class="studio-ai" aria-label="AI提案审查"><div><p class="book-eyebrow">ASSISTED EDITING</p><h2>让 AI 提案，由你定稿</h2><p>导出编排简报交给 AI，再粘贴返回的提案 JSON。先校验和查看差异，接受后只更新草稿。</p><button onclick={exportBrief}>导出 AI 编排简报</button></div>
+	<section class="studio-ai" aria-label="AI提案审查"><div><p class="book-eyebrow">辅助编排</p><h2>让 AI 提案，由你定稿</h2><p>导出编排简报交给 AI，再粘贴返回的提案 JSON。先校验和查看差异，接受后只更新草稿。</p><button onclick={exportBrief}>导出 AI 编排简报</button></div>
 		<div><label>提案 JSON<textarea bind:value={proposalText} oninput={()=>candidate=null} rows="6" placeholder="粘贴 AI 返回的提案 JSON"></textarea></label><button onclick={review}>校验并预览差异</button>
 		{#if candidate}<div class="studio-diff"><h3>待接受的变更</h3><ul>{#each changes as change}<li>{change}</li>{/each}</ul><button onclick={()=>{if(candidate) commit(candidate);}}>接受提案为草稿</button><button onclick={()=>candidate=null}>取消</button></div>{/if}</div>
 	</section>
@@ -290,11 +290,13 @@ function exportBrief() {
 .studio { padding:clamp(16px,3vw,40px); }
 .studio-heading { display:flex; justify-content:space-between; gap:20px; align-items:center; }
 .studio-heading a,.studio-heading p { font-size:12px; color:var(--book-muted); }
-.studio-heading h1 { font-size:32px; font-family:Georgia,"Songti SC",serif; margin-bottom:10px; }
-.studio button,.studio-btn { border:1px solid color-mix(in srgb,var(--book-ink) 20%,transparent); border-radius:8px; padding:8px 12px; font-size:12px; cursor:pointer; display:inline-block; background:var(--book-paper); }
-.studio .book-mode button[aria-pressed=true] { background:var(--book-accent); color:var(--book-paper); border-color:transparent; }
+.studio-heading h1 { position:relative; font-size:32px; font-weight:700; margin-bottom:10px; }
+.studio-heading h1::before { content:""; position:absolute; left:-14px; top:6px; width:4px; height:30px; border-radius:4px; background:var(--primary); }
+.studio button,.studio-btn { border:1px solid transparent; color:var(--btn-content); border-radius:8px; padding:8px 12px; font-size:12px; cursor:pointer; display:inline-block; background:var(--btn-regular-bg); transition:background-color .15s; }
+.studio button:not(:disabled):hover,.studio-btn:hover { background:var(--btn-regular-bg-hover); }
+.studio .book-mode button[aria-pressed=true] { background:var(--primary); color:var(--deep-text); border-color:transparent; }
 .studio button:disabled { opacity:.35; cursor:default; }
-.studio input,.studio textarea,.studio select { width:100%; padding:10px; background:var(--book-paper); border:1px solid color-mix(in srgb,var(--book-ink) 20%,transparent); border-radius:6px; color:var(--book-ink); font-size:13px; }
+.studio input,.studio textarea,.studio select { width:100%; padding:10px; background:var(--book-paper); border:1px solid var(--line-color); border-radius:8px; color:var(--book-ink); font-size:13px; }
 .studio label { display:block; font-size:12px; margin-bottom:14px; line-height:2; }
 .studio label.studio-btn { margin:0; line-height:normal; }
 .studio input[type=file] { position:absolute; width:1px; height:1px; opacity:0; }
@@ -307,15 +309,15 @@ function exportBrief() {
 .studio-outline-title,.studio-preview-controls { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; gap:8px; }
 .studio-outline ol { list-style:none; padding:0; }
 .studio-outline li { border:1px solid transparent; border-radius:8px; margin-bottom:8px; }
-.studio-outline li.active { border-color:var(--book-accent); background:color-mix(in srgb,var(--book-accent) 7%,transparent); }
+.studio-outline li.active { border-color:var(--book-accent); background:var(--btn-regular-bg); }
 .studio button.studio-page-select { display:flex; text-align:left; width:100%; align-items:center; border:0; gap:10px; padding:6px; background:transparent; }
 .studio-page-select img { width:44px; height:54px; object-fit:contain; }
 .studio-page-select small { display:block; font-size:10px; color:var(--book-muted); margin-bottom:5px; }
 .studio-order { display:flex; justify-content:end; gap:4px; padding:0 5px 5px; }
 .studio-order button { padding:3px 10px; }
 .studio-outline > p { font-size:11px; color:var(--book-muted); margin-top:16px; }
-.studio-canvas { min-width:0; background:color-mix(in srgb,var(--book-ink) 5%,transparent); border-radius:8px; padding:16px; }
-.studio-preview { margin:auto; background:var(--book-paper); box-shadow:0 8px 30px #0001; }
+.studio-canvas { min-width:0; background:var(--page-bg); border-radius:var(--radius-large); padding:16px; }
+.studio-preview { margin:auto; background:var(--book-paper); border-radius:12px; overflow:hidden; box-shadow:0 2px 8px #0001; }
 .studio-preview .book-page { padding:24px; }
 .studio-preview .book-section-heading { gap:14px; }
 .studio-preview .book-section-heading h2 { font-size:20px; }

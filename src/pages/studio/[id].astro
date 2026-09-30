@@ -16,5 +16,5 @@ const { book } = Astro.props;
 ---
 <MainGridLayout title={`编排工作台 · ${book.title}`}>
 	<meta slot="head" name="robots" content="noindex,nofollow" />
-	<div class="photobook-shell"><Studio initial={book} client:load /></div>
+	<div class="photobook-shell photobook-focus"><Studio initial={book} client:load /></div>
 </MainGridLayout>

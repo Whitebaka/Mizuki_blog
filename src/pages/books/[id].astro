@@ -17,5 +17,5 @@ const { book } = Astro.props;
 ---
 <MainGridLayout title={book.title} description={book.subtitle}>
 	{previewBooks && <meta slot="head" name="robots" content="noindex,nofollow" />}
-	<div class="photobook-shell"><Reader book={book} /></div>
+	<div class="photobook-shell photobook-focus"><Reader book={book} /></div>
 </MainGridLayout>

@@ -432,7 +432,7 @@ export class SwupHooksManager {
 			return;
 		}
 
-		if (document.querySelector(".photobook-shell")) {
+		if (document.querySelector(".photobook-focus")) {
 			mainContentWrapper.style.position = "absolute";
 			mainContentWrapper.style.setProperty("top", "5.5rem", "important");
 			mainContentWrapper.style.setProperty("margin-top", "0", "important");

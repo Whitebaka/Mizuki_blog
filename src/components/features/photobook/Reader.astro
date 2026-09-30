@@ -9,7 +9,7 @@ const { book } = Astro.props;
 <photobook-reader class="photobook" data-book-id={book.id}>
 	<header class="book-heading">
 		<a class="book-back" href="/books/">← 写真集</a>
-		<p class="book-eyebrow">PHOTO JOURNAL · {book.date.replaceAll("-", ".")}</p>
+		<p class="book-eyebrow">写真集 · {book.date.replaceAll("-", ".")}</p>
 		<div class="book-heading-row"><h1>{book.title}</h1><span class="book-edition">{Object.keys(book.assets).length} 幅 / {book.pages.length} 章</span></div>
 		<p class="book-subtitle">{book.subtitle}</p>
 		<p class="book-credit">{book.credit}</p>
@@ -38,7 +38,7 @@ const { book } = Astro.props;
 		<span data-progress role="status" aria-live="polite"></span>
 		<button type="button" data-next aria-label="下一页">下一页 →</button>
 	</nav>
-	<footer class="book-end"><span>FIN.</span><p>{book.credit}</p><a href="/books/">回到写真集 →</a></footer>
+	<footer class="book-end"><span>这一辑，看到这里</span><p>{book.credit}</p><a href="/books/">回到写真集 →</a></footer>
 </photobook-reader>
 <script>
 	import "../../../scripts/photobook-reader";

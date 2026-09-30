@@ -28,7 +28,7 @@ try{
  assert.equal(report.photoRequests.some(url=>url.includes('-2400-')),false);
  report.initialPhotoRequests=[...report.photoRequests];assert.ok(new Set(report.initialPhotoRequests.map(url=>url.match(/p04-\d+/)?.[0])).size<16);
  await visibleImages(page);await page.screenshot({path:`${output}/reader-desktop.png`});passed('Desktop reader: no banner gap, no overflow, no zoom-size request before click');
- await page.evaluate(()=>document.documentElement.classList.add('dark'));await page.screenshot({path:`${output}/reader-dark.png`});assert.equal(await page.locator('.photobook-shell').evaluate(e=>getComputedStyle(e).getPropertyValue('--book-paper').trim()),'#212820');await page.evaluate(()=>document.documentElement.classList.remove('dark'));passed('Dark reading theme');
+ await page.evaluate(()=>document.documentElement.classList.add('dark'));await page.screenshot({path:`${output}/reader-dark.png`});assert.equal(await page.locator('.photobook-shell').evaluate(e=>{const probe=document.createElement('div');probe.style.background='var(--card-bg)';e.append(probe);const matches=getComputedStyle(e.querySelector('.book-heading')).backgroundColor===getComputedStyle(probe).backgroundColor;probe.remove();return matches;}),true);await page.evaluate(()=>document.documentElement.classList.remove('dark'));passed('Dark reading theme');
  await page.getByRole('button',{name:'画册翻阅',exact:true}).click();
  assert.equal(await page.locator('[data-page]:visible').count(),1);
  await page.locator('[data-next]').click();assert.equal(await page.locator('[data-progress]').innerText(),'02 / 08');

@@ -1,4 +1,5 @@
 ---
+import { PageHeader } from "@components/features/page-header";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
 import { loadBooks, previewBooks } from "../../utils/photobook-loader";
 import { imageSet } from "../../utils/album-images";
@@ -8,7 +9,7 @@ const books = loadBooks();
 <MainGridLayout title="写真集" description="用章节、留白与照片，收藏一些片刻。">
 	{previewBooks && <meta slot="head" name="robots" content="noindex,nofollow" />}
 	<div class="photobook-shell book-shelf">
-		<header class="book-shelf-intro"><div><p class="book-eyebrow">WHITEBAKA / PHOTO JOURNAL</p><h1>写真集</h1><p>把片刻串成故事，慢慢翻阅。</p></div><a class="book-back" href="/albums/">浏览全部相册 ↗</a></header>
+		<header class="book-shelf-intro"><PageHeader title="写真集" subtitle="把片刻串成故事，慢慢翻阅。" /><a class="book-back" href="/albums/">← 浏览全部相册</a></header>
 		<div class="book-shelf-list">
 			{books.map(book => { const cover=book.assets[book.cover]; const images=imageSet(cover.variants); return (
 				<article class="book-cover-card">
