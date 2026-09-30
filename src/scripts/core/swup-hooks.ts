@@ -432,6 +432,13 @@ export class SwupHooksManager {
 			return;
 		}
 
+		if (document.querySelector(".photobook-shell")) {
+			mainContentWrapper.style.position = "absolute";
+			mainContentWrapper.style.setProperty("top", "5.5rem", "important");
+			mainContentWrapper.style.setProperty("margin-top", "0", "important");
+			return;
+		}
+
 		const isMobile = window.innerWidth < 1280;
 		mainContentWrapper.classList.remove("mobile-main-no-banner", "no-banner-layout");
 		mainContentWrapper.style.removeProperty("min-height");

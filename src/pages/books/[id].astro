@@ -1,0 +1,21 @@
+---
+import MainGridLayout from "@layouts/MainGridLayout.astro";
+import Reader from "../../components/features/photobook/Reader.astro";
+import { loadBooks, previewBooks } from "../../utils/photobook-loader";
+import type { Photobook } from "../../types/photobook";
+import "../../styles/photobook.css";
+export function getStaticPaths() {
+	return loadBooks().map((book) => ({
+		params: { id: book.id },
+		props: { book },
+	}));
+}
+interface Props {
+	book: Photobook;
+}
+const { book } = Astro.props;
+---
+<MainGridLayout title={book.title} description={book.subtitle}>
+	{previewBooks && <meta slot="head" name="robots" content="noindex,nofollow" />}
+	<div class="photobook-shell"><Reader book={book} /></div>
+</MainGridLayout>

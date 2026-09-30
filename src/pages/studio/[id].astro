@@ -1,0 +1,20 @@
+---
+import MainGridLayout from "@layouts/MainGridLayout.astro";
+import Studio from "../../components/features/photobook/Studio.svelte";
+import { loadBooks, previewBooks } from "../../utils/photobook-loader";
+import type { Photobook } from "../../types/photobook";
+import "../../styles/photobook.css";
+export function getStaticPaths() {
+	return previewBooks
+		? loadBooks().map((book) => ({ params: { id: book.id }, props: { book } }))
+		: [];
+}
+interface Props {
+	book: Photobook;
+}
+const { book } = Astro.props;
+---
+<MainGridLayout title={`编排工作台 · ${book.title}`}>
+	<meta slot="head" name="robots" content="noindex,nofollow" />
+	<div class="photobook-shell"><Studio initial={book} client:load /></div>
+</MainGridLayout>

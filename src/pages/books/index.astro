@@ -1,0 +1,22 @@
+---
+import MainGridLayout from "@layouts/MainGridLayout.astro";
+import { loadBooks, previewBooks } from "../../utils/photobook-loader";
+import { imageSet } from "../../utils/album-images";
+import "../../styles/photobook.css";
+const books = loadBooks();
+---
+<MainGridLayout title="写真集" description="用章节、留白与照片，收藏一些片刻。">
+	{previewBooks && <meta slot="head" name="robots" content="noindex,nofollow" />}
+	<div class="photobook-shell book-shelf">
+		<header class="book-shelf-intro"><div><p class="book-eyebrow">WHITEBAKA / PHOTO JOURNAL</p><h1>写真集</h1><p>把片刻串成故事，慢慢翻阅。</p></div><a class="book-back" href="/albums/">浏览全部相册 ↗</a></header>
+		<div class="book-shelf-list">
+			{books.map(book => { const cover=book.assets[book.cover]; const images=imageSet(cover.variants); return (
+				<article class="book-cover-card">
+					<a href={`/books/${book.id}/`} aria-label={`阅读${book.title}`}><picture><source type="image/webp" srcset={images.webp} sizes="(max-width:700px) 90vw, 45vw" /><img src={images.fallback!.url} srcset={images.jpeg} sizes="(max-width:700px) 90vw, 45vw" width={cover.width} height={cover.height} alt={cover.alt} /></picture></a>
+					<div><span class="book-eyebrow">{book.date} · {Object.keys(book.assets).length} 幅</span><h2>{book.title}</h2><p>{book.subtitle}</p><a class="book-open" href={`/books/${book.id}/`}>翻开这本写真 →</a>{previewBooks && <a class="book-studio-link" href={`/studio/${book.id}/`}>编排工作台</a>}</div>
+				</article>
+			)})}
+			{books.length===0 && <p>新的写真集正在整理中。</p>}
+		</div>
+	</div>
+</MainGridLayout>

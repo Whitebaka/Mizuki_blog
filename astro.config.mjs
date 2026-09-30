@@ -1,3 +1,4 @@
+import photobookGuard from "./scripts/photobook/build-guard.mjs";
 import { unified } from '@astrojs/markdown-remark';
 import mdx from '@astrojs/mdx';
 import sitemap from "@astrojs/sitemap";
@@ -111,6 +112,7 @@ export default defineConfig({
 	},
 
 	integrations: [
+		photobookGuard(),
 		oddmisc({
 			umami: {
 				shareUrl: false,

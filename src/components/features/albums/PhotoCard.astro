@@ -1,22 +1,19 @@
 ---
+import { photoPresentation } from "@utils/album-images";
 import type { PhotoCardProps } from "./types";
-
-const { src, alt = "", albumId } = Astro.props as PhotoCardProps;
+const photo = Astro.props as PhotoCardProps;
+const { alt = "", albumId, width, height } = photo;
+const images = photoPresentation(photo);
+const sizes = "(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 320px";
 ---
-
 <div class="gallery-photo-card break-inside-avoid mb-3">
-	<div
-		data-fancybox={`gallery-${albumId}`}
-		data-src={src}
-		data-type="image"
-		class="block rounded-xl overflow-hidden group cursor-pointer"
-	>
-		<img
-			src={src}
-			alt={alt}
-			loading="lazy"
-			decoding="async"
-			class="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105"
-		/>
-	</div>
+	<a href={images.zoom} data-fancybox={`gallery-${albumId}`} data-caption={alt}
+		class="block rounded-xl overflow-hidden group cursor-pointer">
+		<picture>
+			{images.webp && <source type="image/webp" srcset={images.webp} sizes={sizes} />}
+			<img src={images.src} srcset={images.jpeg || undefined} sizes={images.jpeg ? sizes : undefined}
+				width={width} height={height} alt={alt} loading="lazy" decoding="async"
+				class="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105" />
+		</picture>
+	</a>
 </div>

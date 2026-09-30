@@ -69,6 +69,14 @@ const {
 			return;
 		}
 
+		// Reading and editing surfaces use the full content area without a banner gap.
+		if (document.querySelector(".photobook-shell")) {
+			mainContent.style.position = "absolute";
+			mainContent.style.setProperty("top", "5.5rem", "important");
+			mainContent.style.setProperty("margin-top", "0", "important");
+			return;
+		}
+
 		const isMobile = window.innerWidth < 1280;
 		const isHomePage =
 			window.location.pathname === "/" || window.location.pathname === "";

@@ -59,3 +59,8 @@ src/data/bilibili-data.json
 *.psd~
 *.cmo3
 *.vtube.json
+
+# Private photobook preview material (never push photos or draft manifests)
+.preview/
+public/photobooks/
+src/data/photobooks/*.private.json

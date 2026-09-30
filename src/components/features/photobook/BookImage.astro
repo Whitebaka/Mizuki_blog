@@ -1,0 +1,29 @@
+---
+import type { BookAsset } from "../../../types/photobook";
+import { imageSet } from "../../../utils/album-images";
+interface Props {
+	asset: BookAsset;
+	group?: string;
+	eager?: boolean;
+	sizes?: string;
+}
+const {
+	asset,
+	group,
+	eager = false,
+	sizes = "(max-width: 700px) 92vw, 60vw",
+} = Astro.props;
+const images = imageSet(asset.variants);
+const zoom = [...asset.variants]
+	.filter((v) => v.format === "webp")
+	.sort((a, b) => b.width - a.width)[0];
+---
+<a class="book-image" href={zoom.url} data-fancybox={group} data-caption={asset.alt} aria-label={`放大：${asset.alt}`} data-no-swup>
+	<picture>
+		<source type="image/webp" srcset={images.webp} sizes={sizes} />
+		<img src={images.fallback!.url} srcset={images.jpeg} sizes={sizes}
+			width={asset.width} height={asset.height} alt={asset.alt}
+			loading={eager ? "eager" : "lazy"} fetchpriority={eager ? "high" : "auto"} decoding="async" />
+	</picture>
+	<span class="book-image-status" data-image-status hidden>正在加载照片…</span>
+</a>

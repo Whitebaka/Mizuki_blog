@@ -1,11 +1,9 @@
-import type { AlbumGroup } from "../../../types/album";
+import type { AlbumGroup, Photo } from "../../../types/album";
 
 export interface AlbumCardProps {
 	album: AlbumGroup;
 }
 
-export interface PhotoCardProps {
-	src: string;
-	alt?: string;
+export interface PhotoCardProps extends Photo {
 	albumId: string;
 }

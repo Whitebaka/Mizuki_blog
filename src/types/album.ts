@@ -1,9 +1,13 @@
+import type { ImageVariant } from "./photobook";
+
 export interface Photo {
 	id?: string;
 	src: string;
 	alt?: string;
 	title?: string;
 	thumbnail?: string;
+	fullsize?: string;
+	variants?: ImageVariant[];
 	tags?: string[];
 	description?: string;
 	date?: string;

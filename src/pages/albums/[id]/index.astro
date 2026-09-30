@@ -2,6 +2,7 @@
 import { PhotoCard } from "@components/features/albums";
 import PasswordProtection from "@components/features/auth/PasswordProtection.astro";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
+import { encryptedPhotoMarkup } from "@utils/album-images";
 import { encryptContent } from "@utils/crypto-utils";
 import { Icon } from "astro-icon/components";
 
@@ -37,10 +38,7 @@ const isEncrypted = !!album.password;
 let encryptedPhotoData = "";
 if (isEncrypted) {
 	const photoHtml = album.photos
-		.map(
-			(photo: Photo) =>
-				`<div class="gallery-masonry-item"><a data-fancybox="album-${album.id}" href="${photo.src}" data-caption="${photo.alt || photo.title || ""}"><img src="${photo.src}" alt="${photo.alt || photo.title || ""}" loading="lazy" decoding="async" class="w-full rounded-lg" /></a></div>`,
-		)
+		.map((photo: Photo) => encryptedPhotoMarkup(photo, album.id))
 		.join("");
 	const wrappedHtml = `<div class="gallery-masonry">${photoHtml}</div>`;
 	encryptedPhotoData = encryptContent(
@@ -192,7 +190,7 @@ if (isEncrypted) {
 					<div class="gallery-masonry">
 						{album.photos.map((photo: Photo) => (
 							<PhotoCard
-								src={photo.src}
+								{...photo}
 								alt={photo.alt || photo.title || ""}
 								albumId={album.id}
 							/>

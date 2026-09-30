@@ -132,6 +132,7 @@ export const navBarConfig: NavBarConfig = {
 		LinkPreset.Home,
 		// 预设链接：归档
 		LinkPreset.Archive,
+		{ name: "写真集", url: "/books/", icon: "material-symbols:photo-library" },
 		// 预设链接：关于
 		LinkPreset.About,
 	],

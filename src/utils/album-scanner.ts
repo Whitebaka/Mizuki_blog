@@ -187,6 +187,8 @@ function processExternalPhotos(
 		src: string;
 		id?: string;
 		thumbnail?: string;
+		fullsize?: string;
+		variants?: Photo["variants"];
 		alt?: string;
 		title?: string;
 		description?: string;
@@ -210,6 +212,8 @@ function processExternalPhotos(
 			id: photo.id || `${albumId}-external-photo-${index}`,
 			src: photo.src,
 			thumbnail: photo.thumbnail,
+			fullsize: photo.fullsize,
+			variants: photo.variants,
 			alt: photo.alt || photo.title || `Photo ${index + 1}`,
 			title: photo.title,
 			description: photo.description,
