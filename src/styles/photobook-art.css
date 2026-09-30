@@ -1,0 +1,54 @@
+/* Editorial artwork is scoped to the cover, pages and studio canvas only.
+   Per-book art direction can override these tokens via .book-art[data-artwork="<id>"].
+   Never use site --primary/--hue here, or style reader/editor controls from this file. */
+.book-art {
+ --book-art-paper:#faf9f5;
+ --book-art-ink:#343b34;
+ --book-art-muted:#73796e;
+ --book-art-accent:#56694e;
+ --book-art-mat:#f0eee9;
+ --book-art-heading-font:Georgia,"Songti SC","Noto Serif CJK SC",serif;
+ color:var(--book-art-ink);
+}
+/* Deliberately authored night palette; independent of the site's selected hue. */
+.dark .book-art {
+ --book-art-paper:#22251f;
+ --book-art-ink:#ecece4;
+ --book-art-muted:#b0b7a8;
+ --book-art-accent:#c1d4b4;
+ --book-art-mat:#292c25;
+}
+.book-heading.book-art,.book-art .book-page {
+ background:var(--book-art-paper);
+ border-radius:var(--radius-large);
+ padding:clamp(28px,4vw,56px);
+}
+.book-art .book-eyebrow {
+ color:var(--book-art-accent);
+ font-size:11px;
+ letter-spacing:.18em;
+ margin:0 0 18px;
+}
+.book-art h1 {
+ font-family:var(--book-art-heading-font);
+ font-size:clamp(32px,4vw,52px);
+ font-weight:400;
+ line-height:1.35;
+ letter-spacing:.06em;
+}
+.book-art .book-subtitle { max-width:600px; font-size:14px; line-height:1.9; margin:18px 0 12px; }
+.book-art .book-credit { font-size:12px; color:var(--book-art-muted); }
+.book-art .book-page { scroll-margin-top:96px; }
+.book-art .book-section-heading { display:flex; gap:22px; align-items:center; margin-bottom:26px; }
+.book-art .book-section-heading > span {
+ font-family:var(--book-art-heading-font);
+ font-style:italic;
+ font-size:34px;
+ color:var(--book-art-muted);
+}
+.book-art .book-section-heading p { font-size:11px; letter-spacing:.14em; color:var(--book-art-muted); margin-bottom:6px; }
+.book-art .book-section-heading h2 { font-family:var(--book-art-heading-font); font-size:24px; font-weight:400; letter-spacing:.06em; line-height:1.4; }
+@media(max-width:700px) {
+ .book-heading.book-art,.book-art .book-page { padding:24px; }
+ .book-art .book-section-heading { gap:18px; }
+}

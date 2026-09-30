@@ -28,7 +28,17 @@ try{
  assert.equal(report.photoRequests.some(url=>url.includes('-2400-')),false);
  report.initialPhotoRequests=[...report.photoRequests];assert.ok(new Set(report.initialPhotoRequests.map(url=>url.match(/p04-\d+/)?.[0])).size<16);
  await visibleImages(page);await page.screenshot({path:`${output}/reader-desktop.png`});passed('Desktop reader: no banner gap, no overflow, no zoom-size request before click');
- await page.evaluate(()=>document.documentElement.classList.add('dark'));await page.screenshot({path:`${output}/reader-dark.png`});assert.equal(await page.locator('.photobook-shell').evaluate(e=>{const probe=document.createElement('div');probe.style.background='var(--card-bg)';e.append(probe);const matches=getComputedStyle(e.querySelector('.book-heading')).backgroundColor===getComputedStyle(probe).backgroundColor;probe.remove();return matches;}),true);await page.evaluate(()=>document.documentElement.classList.remove('dark'));passed('Dark reading theme');
+ await page.evaluate(()=>document.documentElement.classList.add('dark'));await page.screenshot({path:`${output}/reader-dark.png`});assert.equal(await page.locator('.photobook-shell').evaluate(e=>{const probe=document.createElement('div');probe.style.background='var(--card-bg)';e.append(probe);const matches=getComputedStyle(e.querySelector('.book-navigation')).backgroundColor===getComputedStyle(probe).backgroundColor;probe.remove();return matches;}),true);await page.evaluate(()=>document.documentElement.classList.remove('dark'));passed('Dark reading theme');
+ // Site controls follow the visitor's hue; editorial paper and ink remain art-directed.
+ const artStyles=()=>page.locator('[data-page]').first().evaluate(e=>({paper:getComputedStyle(e).backgroundColor,ink:getComputedStyle(e).color,font:getComputedStyle(e.querySelector('h2')).fontFamily}));
+ const beforeArt=await artStyles();
+ const beforeUI=await page.locator('.book-mode button').first().evaluate(e=>getComputedStyle(e).backgroundColor);
+ await page.evaluate(()=>document.documentElement.style.setProperty('--hue','160'));
+ assert.deepEqual(await artStyles(),beforeArt);
+ assert.notEqual(await page.locator('.book-mode button').first().evaluate(e=>getComputedStyle(e).backgroundColor),beforeUI);
+ await page.evaluate(()=>document.documentElement.style.removeProperty('--hue'));
+ report.artStyles=beforeArt;
+ passed('Site UI follows theme hue while book artwork keeps independent paper, ink and typography');
  await page.getByRole('button',{name:'画册翻阅',exact:true}).click();
  assert.equal(await page.locator('[data-page]:visible').count(),1);
  await page.locator('[data-next]').click();assert.equal(await page.locator('[data-progress]').innerText(),'02 / 08');
@@ -68,6 +78,7 @@ try{
  await page.getByRole('button',{name:'接受提案为草稿'}).click();
  const revised=await page.evaluate(id=>JSON.parse(localStorage.getItem(`mizuki:photobook:${id}`)).book,bookId);assert.equal(revised.pages[1].id,'alley');
  passed('Studio edit, undo/redo, lock enforcement and transactional AI proposal');
+ assert.deepEqual(await page.locator('.studio-preview .book-page').evaluate(e=>({paper:getComputedStyle(e).backgroundColor,ink:getComputedStyle(e).color,font:getComputedStyle(e.querySelector('h2')).fontFamily})),report.artStyles);
  await page.getByRole('button',{name:'手机重排'}).click();await noOverflow(page);
  await visibleImages(page);await page.screenshot({path:`${output}/studio-desktop.png`});
  await page.reload({waitUntil:'domcontentloaded'});await page.getByRole('button',{name:'恢复草稿'}).click();

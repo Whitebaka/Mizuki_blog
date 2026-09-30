@@ -7,10 +7,10 @@ interface Props {
 const { book } = Astro.props;
 ---
 <photobook-reader class="photobook" data-book-id={book.id}>
-	<header class="book-heading">
-		<a class="book-back" href="/books/">← 写真集</a>
+	<nav class="book-navigation" aria-label="写真集导航"><a class="book-back" href="/books/">← 写真集</a><span class="book-edition">{Object.keys(book.assets).length} 幅 / {book.pages.length} 章</span></nav>
+	<header class="book-heading book-art" data-artwork={book.id}>
 		<p class="book-eyebrow">写真集 · {book.date.replaceAll("-", ".")}</p>
-		<div class="book-heading-row"><h1>{book.title}</h1><span class="book-edition">{Object.keys(book.assets).length} 幅 / {book.pages.length} 章</span></div>
+		<h1>{book.title}</h1>
 		<p class="book-subtitle">{book.subtitle}</p>
 		<p class="book-credit">{book.credit}</p>
 	</header>
@@ -22,7 +22,7 @@ const { book } = Astro.props;
 		<label class="book-chapter-label">章节 <select data-chapter aria-label="跳转章节">{book.pages.map((p,i) => <option value={p.id}>{String(i+1).padStart(2,"0")} · {p.title}</option>)}</select></label>
 		<span class="book-help">点图查看细节</span>
 	</div>
-	<div class="book-pages" data-pages tabindex="-1">
+	<div class="book-pages book-art" data-artwork={book.id} data-pages tabindex="-1">
 		{book.pages.map((page,index) => (
 			<section class={`book-page book-${page.template}`} id={page.id} data-page data-template={page.template} aria-labelledby={`title-${page.id}`}>
 				<div class="book-section-heading"><span>{String(index+1).padStart(2,"0")}</span><div><p>{page.chapter}</p><h2 id={`title-${page.id}`}>{page.title}</h2></div></div>

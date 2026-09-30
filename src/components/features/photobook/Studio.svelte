@@ -259,7 +259,7 @@ function exportBrief() {
 		</aside>
 		<section class="studio-canvas" aria-label="当前单元预览">
 			<div class="studio-preview-controls"><h2>预览</h2><div class="book-mode"><button aria-pressed={!mobile} onclick={()=>mobile=false}>桌面对页</button><button aria-pressed={mobile} onclick={()=>mobile=true}>手机重排</button></div></div>
-			<div class:mobile class="studio-preview photobook">
+			<div class:mobile class="studio-preview photobook book-art" data-artwork={book.id}>
 				<section class={`book-page book-${page.template}`}>
 					<div class="book-section-heading"><span>{String(selected+1).padStart(2,"0")}</span><div><p>{page.chapter}</p><h2>{page.title}</h2></div></div>
 					<div class="book-composition">{#each page.assets as id}<figure><img src={reading(id)} alt={book.assets[id].alt} width={book.assets[id].width} height={book.assets[id].height} /><figcaption>{book.assets[id].alt}</figcaption></figure>{/each}</div>
@@ -289,35 +289,35 @@ function exportBrief() {
 <style>
 .studio { padding:clamp(16px,3vw,40px); }
 .studio-heading { display:flex; justify-content:space-between; gap:20px; align-items:center; }
-.studio-heading a,.studio-heading p { font-size:12px; color:var(--book-muted); }
+.studio-heading a,.studio-heading p { font-size:12px; color:var(--book-ui-muted); }
 .studio-heading h1 { position:relative; font-size:32px; font-weight:700; margin-bottom:10px; }
 .studio-heading h1::before { content:""; position:absolute; left:-14px; top:6px; width:4px; height:30px; border-radius:4px; background:var(--primary); }
 .studio button,.studio-btn { border:1px solid transparent; color:var(--btn-content); border-radius:8px; padding:8px 12px; font-size:12px; cursor:pointer; display:inline-block; background:var(--btn-regular-bg); transition:background-color .15s; }
 .studio button:not(:disabled):hover,.studio-btn:hover { background:var(--btn-regular-bg-hover); }
 .studio .book-mode button[aria-pressed=true] { background:var(--primary); color:var(--deep-text); border-color:transparent; }
 .studio button:disabled { opacity:.35; cursor:default; }
-.studio input,.studio textarea,.studio select { width:100%; padding:10px; background:var(--book-paper); border:1px solid var(--line-color); border-radius:8px; color:var(--book-ink); font-size:13px; }
+.studio input,.studio textarea,.studio select { width:100%; padding:10px; background:var(--book-ui-paper); border:1px solid var(--line-color); border-radius:8px; color:var(--book-ui-ink); font-size:13px; }
 .studio label { display:block; font-size:12px; margin-bottom:14px; line-height:2; }
 .studio label.studio-btn { margin:0; line-height:normal; }
 .studio input[type=file] { position:absolute; width:1px; height:1px; opacity:0; }
-.studio label:focus-within { outline:2px solid var(--book-accent); }
-.studio-note { font-size:12px; line-height:1.9; color:var(--book-muted); margin:20px 0; }
-.studio-toolbar { display:flex; flex-wrap:wrap; align-items:center; gap:8px; border-block:1px solid color-mix(in srgb,var(--book-ink) 10%,transparent); padding:14px 0; }
-.studio-toolbar span { font-size:11px; color:var(--book-muted); }
+.studio label:focus-within { outline:2px solid var(--book-ui-accent); }
+.studio-note { font-size:12px; line-height:1.9; color:var(--book-ui-muted); margin:20px 0; }
+.studio-toolbar { display:flex; flex-wrap:wrap; align-items:center; gap:8px; border-block:1px solid color-mix(in srgb,var(--book-ui-ink) 10%,transparent); padding:14px 0; }
+.studio-toolbar span { font-size:11px; color:var(--book-ui-muted); }
 .studio-workspace { display:grid; grid-template-columns:200px minmax(0,1fr) 220px; gap:22px; margin-top:24px; align-items:start; }
 .studio h2 { font-size:15px; font-weight:600; }
 .studio-outline-title,.studio-preview-controls { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; gap:8px; }
 .studio-outline ol { list-style:none; padding:0; }
 .studio-outline li { border:1px solid transparent; border-radius:8px; margin-bottom:8px; }
-.studio-outline li.active { border-color:var(--book-accent); background:var(--btn-regular-bg); }
+.studio-outline li.active { border-color:var(--book-ui-accent); background:var(--btn-regular-bg); }
 .studio button.studio-page-select { display:flex; text-align:left; width:100%; align-items:center; border:0; gap:10px; padding:6px; background:transparent; }
 .studio-page-select img { width:44px; height:54px; object-fit:contain; }
-.studio-page-select small { display:block; font-size:10px; color:var(--book-muted); margin-bottom:5px; }
+.studio-page-select small { display:block; font-size:10px; color:var(--book-ui-muted); margin-bottom:5px; }
 .studio-order { display:flex; justify-content:end; gap:4px; padding:0 5px 5px; }
 .studio-order button { padding:3px 10px; }
-.studio-outline > p { font-size:11px; color:var(--book-muted); margin-top:16px; }
+.studio-outline > p { font-size:11px; color:var(--book-ui-muted); margin-top:16px; }
 .studio-canvas { min-width:0; background:var(--page-bg); border-radius:var(--radius-large); padding:16px; }
-.studio-preview { margin:auto; background:var(--book-paper); border-radius:12px; overflow:hidden; box-shadow:0 2px 8px #0001; }
+.studio-preview { margin:auto; background:var(--book-art-paper); border-radius:12px; overflow:hidden; box-shadow:0 2px 8px #0001; }
 .studio-preview .book-page { padding:24px; }
 .studio-preview .book-section-heading { gap:14px; }
 .studio-preview .book-section-heading h2 { font-size:20px; }
@@ -327,10 +327,10 @@ function exportBrief() {
 .studio-preview.mobile .book-composition figure:first-child { width:100%; }
 .studio-properties h3 { font-size:12px; margin:20px 0 10px; }
 .studio-error { padding:14px; background:#fff0e8; border:1px solid #b45d34; border-radius:8px; color:#6f3218; font-size:13px; margin-top:16px; }
-.studio-ai { border-top:1px solid color-mix(in srgb,var(--book-ink) 15%,transparent); margin-top:40px; padding-top:30px; display:grid; grid-template-columns:1fr 1.5fr; gap:30px; }
+.studio-ai { border-top:1px solid color-mix(in srgb,var(--book-ui-ink) 15%,transparent); margin-top:40px; padding-top:30px; display:grid; grid-template-columns:1fr 1.5fr; gap:30px; }
 .studio-ai p { font-size:13px; line-height:1.9; margin:16px 0; }
 .studio-ai textarea { font-family:monospace; }
-.studio-diff { margin-top:20px; border:1px solid var(--book-accent); border-radius:8px; padding:16px; font-size:13px; }
+.studio-diff { margin-top:20px; border:1px solid var(--book-ui-accent); border-radius:8px; padding:16px; font-size:13px; }
 .studio-diff ul { margin:12px 0; padding-left:18px; list-style:disc; line-height:1.8; }
 .studio-diff button { margin-right:8px; }
 @media(max-width:1100px) { .studio-workspace { grid-template-columns:160px minmax(0,1fr); } .studio-properties { grid-column:1/-1; display:grid; grid-template-columns:1fr 1fr; gap:12px; } .studio-properties .studio-outline-title { grid-column:1/-1; } }
