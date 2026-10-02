@@ -14,20 +14,21 @@ body:has(.photobook-focus) #swup-container { grid-column:1 / -1 !important; widt
 .dark .photobook-shell { --book-ui-ink:rgba(255,255,255,.9); }
 .photobook-shell:not(:has(photobook-reader)) { background:var(--card-bg-transparent); }
 .photobook { display:grid; gap:16px; }
-.book-navigation,.book-controls,.book-pager,.book-end { background:var(--card-bg-transparent); border-radius:var(--radius-large); }
+.book-toolbar,.book-pager,.book-end { background:var(--card-bg-transparent); border-radius:var(--radius-large); }
 .photobook-shell a:focus-visible,.photobook-shell button:focus-visible,.photobook-shell select:focus-visible { outline:2px solid var(--book-ui-accent); outline-offset:4px; }
 .photobook-shell [hidden] { display:none !important; }
 
-.book-navigation { display:flex; justify-content:space-between; align-items:center; gap:16px; padding:16px 28px; }
+.book-toolbar { display:flex; align-items:center; flex-wrap:wrap; gap:12px; padding:10px 20px; position:sticky; top:0; z-index:12; background:var(--book-ui-paper); }
+.book-toolbar-title { font-size:14px; font-weight:600; margin-right:auto; }
 .book-back,.book-edition,.book-help { font-size:12px; color:var(--book-ui-muted); }
 .book-eyebrow { font-size:12px; margin:20px 0 12px; color:var(--book-ui-muted); }
 .book-edition { background:var(--btn-regular-bg); color:var(--btn-content); padding:6px 12px; border-radius:8px; }
 .book-back { color:var(--btn-content); }
 .book-back:hover,.book-studio-link:hover { text-decoration:underline; }
 
-.book-controls { position:sticky; top:0; z-index:12; display:flex; flex-wrap:wrap; align-items:center; gap:16px; padding:12px 28px; background:var(--book-ui-paper); box-shadow:0 1px 0 var(--line-divider); scroll-margin-top:12px; }
+.book-controls { display:flex; flex-wrap:wrap; align-items:center; gap:12px; margin-left:auto; }
 .book-mode { display:flex; background:var(--btn-regular-bg); border-radius:12px; padding:4px; gap:4px; }
-.book-mode button { padding:9px 16px; font-size:13px; border-radius:8px; color:var(--btn-content); transition:background-color .15s,color .15s; cursor:pointer; }
+.book-mode button { padding:7px 12px; font-size:13px; border-radius:8px; color:var(--btn-content); transition:background-color .15s,color .15s; cursor:pointer; }
 .book-mode button[aria-pressed=true] { background:var(--primary); color:var(--deep-text); }
 .book-chapter-label { font-size:12px; display:flex; align-items:center; gap:8px; }
 .book-chapter-label select { padding:8px; background:var(--btn-regular-bg); color:var(--btn-content); border-radius:8px; max-width:180px; }
@@ -46,9 +47,6 @@ body:has(.photobook-focus) #swup-container { grid-column:1 / -1 !important; widt
 .book-pager button { padding:12px 16px; cursor:pointer; background:var(--btn-regular-bg); color:var(--btn-content); border-radius:8px; font-size:13px; }
 .book-pager button:disabled { opacity:.3; cursor:default; }
 .book-pager [role=status] { font-size:12px; font-variant-numeric:tabular-nums; }
-.photobook[data-mode=book] .book-page { min-height:50vh; padding-block:28px; }
-.photobook[data-mode=book] .book-image img { max-height:60vh; }
-.photobook[data-mode=book] .book-section-heading { margin-bottom:16px; }
 .book-end { text-align:center; padding:32px 24px; }
 .book-end span { font-size:18px; font-weight:700; }
 .book-end p { font-size:12px; color:var(--book-ui-muted); margin:20px 0; }
@@ -67,7 +65,8 @@ body:has(.photobook-focus) #swup-container { grid-column:1 / -1 !important; widt
 .book-mode button[aria-pressed=true]:hover { background:var(--primary); }
 @media(max-width:700px) {
  .book-help { display:none; }
- .book-controls { gap:10px; padding:12px 18px; }
+ .book-toolbar { padding:10px 14px; gap:10px; }
+ .book-controls { width:100%; justify-content:space-between; gap:8px; }
  .book-mode button { padding:9px 12px; }
  .book-chapter-label { flex:1; justify-content:flex-end; }
  .book-chapter-label select { max-width:130px; }
@@ -75,10 +74,41 @@ body:has(.photobook-focus) #swup-container { grid-column:1 / -1 !important; widt
  .book-sequence .book-composition figure:first-child { width:100%; }
  .book-cover-card { grid-template-columns:1fr; gap:20px; }
  .book-image img { max-height:none; }
- .photobook[data-mode=book] .book-image img { height:53vh; max-height:53vh; }
  .book-shelf { padding:24px; }
- .book-navigation { padding:14px 18px; }
  .book-eyebrow { margin-top:16px; }
  .book-pager { padding:16px 18px; }
+}
+/* A book view is one viewport-sized stage; controls never compete with the introduction. */
+photobook-reader[data-mode=book] { height:var(--reader-height,calc(100dvh - 7rem)); min-height:300px; grid-template-rows:auto minmax(0,1fr) auto; gap:0; }
+photobook-reader[data-mode=book] > .book-heading,
+photobook-reader[data-mode=book] > .book-end { display:none; }
+photobook-reader[data-mode=book] .book-toolbar { position:relative; border-radius:var(--radius-large) var(--radius-large) 0 0; border-bottom:1px solid var(--line-divider); }
+photobook-reader[data-mode=book] .book-pages { min-height:0; gap:0; }
+photobook-reader[data-mode=book] .book-page { min-height:0; height:100%; display:flex; flex-direction:column; padding:16px 28px; border-radius:0; }
+photobook-reader[data-mode=book] .book-section-heading { flex:none; gap:12px; margin-bottom:12px; }
+photobook-reader[data-mode=book] .book-section-heading > span { font-size:24px; }
+photobook-reader[data-mode=book] .book-section-heading h2 { font-size:20px; }
+photobook-reader[data-mode=book] .book-section-heading p { font-size:10px; margin-bottom:2px; }
+photobook-reader[data-mode=book] .book-composition { flex:1; min-height:0; width:100%; max-width:none; margin:0; gap:20px; grid-template-rows:minmax(0,1fr); align-items:stretch; }
+photobook-reader[data-mode=book] .book-sequence .book-composition { grid-template-columns:repeat(3,minmax(0,1fr)); }
+photobook-reader[data-mode=book] .book-composition figure { min-width:0; min-height:0; height:100%; }
+photobook-reader[data-mode=book] .book-sequence figure:first-child { grid-column:auto; width:100%; margin:0; }
+photobook-reader[data-mode=book] .book-image,
+photobook-reader[data-mode=book] .book-image picture { display:block; height:100%; }
+photobook-reader[data-mode=book] .book-image { background:transparent; }
+photobook-reader[data-mode=book] .book-image img { height:100%; max-height:100%; width:100%; object-fit:contain; }
+photobook-reader[data-mode=book] figcaption { display:none; }
+photobook-reader[data-mode=book] .book-caption { flex:none; font-size:12px; line-height:1.6; margin:10px auto 0; max-height:4.8em; overflow:auto; }
+photobook-reader[data-mode=book] .book-pager { padding:8px 20px; border-top:1px solid var(--line-divider); border-radius:0 0 var(--radius-large) var(--radius-large); }
+photobook-reader[data-mode=book] .book-pager button { padding:8px 14px; }
+/* The opening's title is already in the introduction in chapter mode. */
+photobook-reader:not([data-mode=book]) .book-opening .book-section-heading { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); }
+photobook-reader:not([data-mode=book]) .book-heading { margin-bottom:-16px; border-radius:var(--radius-large) var(--radius-large) 0 0; }
+photobook-reader:not([data-mode=book]) .book-opening { border-radius:0 0 var(--radius-large) var(--radius-large); padding-top:16px; }
+@media(max-width:700px) {
+ photobook-reader[data-mode=book] .book-page { padding:12px 14px; }
+ photobook-reader[data-mode=book] .book-composition,
+ photobook-reader[data-mode=book] .book-sequence .book-composition { grid-template-columns:minmax(0,1fr); }
+ photobook-reader[data-mode=book] .book-pager { padding:8px 14px; }
 }
 @media(prefers-reduced-motion:reduce) { .photobook-shell * { scroll-behavior:auto !important; transition:none !important; animation:none !important; } }

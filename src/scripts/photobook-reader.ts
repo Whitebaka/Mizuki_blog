@@ -1,7 +1,9 @@
 class PhotobookReader extends HTMLElement {
 	private controller?: AbortController;
+	private resizeObserver?: ResizeObserver;
 	connectedCallback() {
 		this.controller?.abort();
+		this.resizeObserver?.disconnect();
 		this.controller = new AbortController();
 		const { signal } = this.controller;
 		const imageStatus = (img: HTMLImageElement, failed = false) => {
@@ -25,6 +27,15 @@ class PhotobookReader extends HTMLElement {
 		let pageIndex = Math.max(0,pages.findIndex(p => p.id === location.hash.slice(1)));
 		let figureIndex = 0;
 		const figures = (p: HTMLElement) => [...p.querySelectorAll<HTMLElement>("[data-figure]")];
+		// Measure actual viewport space, including Mizuki's page scaling and browser zoom.
+		const fitStage = () => {
+			if (mode !== "book" || !this.offsetWidth) return;
+			const rect = this.getBoundingClientRect();
+			const scale = rect.width / this.offsetWidth;
+			const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
+			const top = Math.max(0, rect.top);
+			this.style.setProperty("--reader-height", `${Math.max(300, (viewportHeight - top - 12) / scale)}px`);
+		};
 		const update = () => {
 			this.dataset.mode = mode;
 			pager.hidden = mode !== "book";
@@ -39,6 +50,7 @@ class PhotobookReader extends HTMLElement {
 			previous.disabled = current === 1;
 			next.disabled = current === count;
 			chapter.value = pages[pageIndex].id;
+			fitStage();
 		};
 		const bookmark = () => history.replaceState(history.state,"",`#${pages[pageIndex].id}`);
 		const turn = (direction: number) => {
@@ -54,7 +66,7 @@ class PhotobookReader extends HTMLElement {
 		this.querySelectorAll<HTMLButtonElement>("[data-mode]").forEach(button => button.addEventListener("click",() => {
 			mode=button.dataset.mode!; figureIndex=0; update();
 			if (mode === "scroll") pages[pageIndex].scrollIntoView({block:"start"});
-			else controls.scrollIntoView({block:"start"});
+			else { window.scrollTo({top:0,behavior:"instant"}); fitStage(); }
 		},{signal}));
 		previous.addEventListener("click",() => turn(-1),{signal});
 		next.addEventListener("click",() => turn(1),{signal});
@@ -79,8 +91,12 @@ class PhotobookReader extends HTMLElement {
 			if(Math.abs(dx)>70 && Math.abs(dx)>Math.abs(dy)*2) turn(dx<0 ? 1 : -1);
 			start=null;
 		},{signal,passive:true});
+		this.resizeObserver = new ResizeObserver(fitStage);
+		this.resizeObserver.observe(this.querySelector<HTMLElement>(".book-toolbar")!);
+		window.addEventListener("resize", fitStage, {signal});
+		window.visualViewport?.addEventListener("resize", fitStage, {signal});
 		update();
 	}
-	disconnectedCallback() { this.controller?.abort(); }
+	disconnectedCallback() { this.controller?.abort(); this.resizeObserver?.disconnect(); }
 }
 if (!customElements.get("photobook-reader")) customElements.define("photobook-reader",PhotobookReader);

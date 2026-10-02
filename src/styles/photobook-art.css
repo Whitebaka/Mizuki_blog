@@ -52,3 +52,12 @@
  .book-heading.book-art,.book-art .book-page { padding:24px; }
  .book-art .book-section-heading { gap:18px; }
 }
+
+/* Chapter introduction shares the first photographic surface, with compact editorial text. */
+.book-heading.book-art { display:grid; grid-template-columns:1fr 1.3fr; align-items:center; gap:24px; padding:24px 36px; }
+.book-heading.book-art h1 { font-size:clamp(28px,3vw,38px); }
+.book-heading.book-art .book-eyebrow { margin-bottom:10px; }
+.book-heading.book-art .book-subtitle { margin:0 0 10px; }
+@media(max-width:700px) {
+ .book-heading.book-art { grid-template-columns:1fr; gap:14px; padding:22px 24px; }
+}

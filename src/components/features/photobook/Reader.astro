@@ -7,24 +7,24 @@ interface Props {
 const { book } = Astro.props;
 ---
 <photobook-reader class="photobook" data-book-id={book.id}>
-	<nav class="book-navigation" aria-label="写真集导航"><a class="book-back" href="/books/">← 写真集</a><span class="book-edition">{Object.keys(book.assets).length} 幅 / {book.pages.length} 章</span></nav>
-	<header class="book-heading book-art" data-artwork={book.id}>
-		<p class="book-eyebrow">写真集 · {book.date.replaceAll("-", ".")}</p>
-		<h1>{book.title}</h1>
-		<p class="book-subtitle">{book.subtitle}</p>
-		<p class="book-credit">{book.credit}</p>
-	</header>
-	<div class="book-controls" data-controls hidden>
+	<div class="book-toolbar">
+		<a class="book-back" href="/books/">← 写真集</a>
+		<span class="book-toolbar-title">{book.title}</span>
+		<div class="book-controls" data-controls hidden>
 		<div class="book-mode" role="group" aria-label="阅读方式">
 			<button type="button" data-mode="scroll" aria-pressed="true">章节阅读</button>
 			<button type="button" data-mode="book" aria-pressed="false">画册翻阅</button>
 		</div>
 		<label class="book-chapter-label">章节 <select data-chapter aria-label="跳转章节">{book.pages.map((p,i) => <option value={p.id}>{String(i+1).padStart(2,"0")} · {p.title}</option>)}</select></label>
-		<span class="book-help">点图查看细节</span>
+		</div>
 	</div>
+	<header class="book-heading book-art" data-artwork={book.id}>
+		<div><p class="book-eyebrow">写真集 · {book.date.replaceAll("-", ".")} · {Object.keys(book.assets).length} 幅 / {book.pages.length} 章</p><h1>{book.title}</h1></div>
+		<div><p class="book-subtitle">{book.subtitle}</p><p class="book-credit">{book.credit}</p></div>
+	</header>
 	<div class="book-pages book-art" data-artwork={book.id} data-pages tabindex="-1">
 		{book.pages.map((page,index) => (
-			<section class={`book-page book-${page.template}`} id={page.id} data-page data-template={page.template} aria-labelledby={`title-${page.id}`}>
+			<section class={`book-page book-${page.template}${index === 0 && page.title === book.title ? " book-opening" : ""}`} id={page.id} data-page data-template={page.template} aria-labelledby={`title-${page.id}`}>
 				<div class="book-section-heading"><span>{String(index+1).padStart(2,"0")}</span><div><p>{page.chapter}</p><h2 id={`title-${page.id}`}>{page.title}</h2></div></div>
 				<div class="book-composition">
 					{page.assets.map((id,i) => <figure data-figure data-asset-id={id}><BookImage asset={book.assets[id]} group={`book-${book.id}`} eager={index === 0 && i === 0} sizes={page.assets.length > 1 ? "(max-width: 700px) 92vw, 40vw" : "(max-width: 700px) 92vw, 75vw"} /><figcaption>{book.assets[id].alt}</figcaption></figure>)}
