@@ -31,7 +31,7 @@ export function photoPresentation(photo: Photo) {
 		zoom: photo.fullsize || zoom?.url || photo.src,
 	};
 }
-const escape = (value: unknown) =>
+const escapeHtml = (value: unknown) =>
 	String(value ?? "").replace(
 		/[&<>"']/g,
 		(c) =>
@@ -41,7 +41,7 @@ const escape = (value: unknown) =>
 	);
 export function encryptedPhotoMarkup(photo: Photo, albumId: string) {
 	const p = photoPresentation(photo);
-	const alt = escape(photo.alt || photo.title);
+	const alt = escapeHtml(photo.alt || photo.title);
 	const sizes = "(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 320px";
-	return `<div class="gallery-masonry-item"><a data-fancybox="album-${escape(albumId)}" href="${escape(p.zoom)}" data-caption="${alt}"><picture>${p.webp ? `<source type="image/webp" srcset="${escape(p.webp)}" sizes="${sizes}">` : ""}<img src="${escape(p.src)}" ${p.jpeg ? `srcset="${escape(p.jpeg)}" sizes="${sizes}"` : ""} ${photo.width && photo.height ? `width="${photo.width}" height="${photo.height}"` : ""} alt="${alt}" loading="lazy" decoding="async" class="w-full rounded-lg"></picture></a></div>`;
+	return `<div class="gallery-masonry-item"><a data-fancybox="album-${escapeHtml(albumId)}" href="${escapeHtml(p.zoom)}" data-caption="${alt}"><picture>${p.webp ? `<source type="image/webp" srcset="${escapeHtml(p.webp)}" sizes="${sizes}">` : ""}<img src="${escapeHtml(p.src)}" ${p.jpeg ? `srcset="${escapeHtml(p.jpeg)}" sizes="${sizes}"` : ""} ${photo.width && photo.height ? `width="${photo.width}" height="${photo.height}"` : ""} alt="${alt}" loading="lazy" decoding="async" class="w-full rounded-lg"></picture></a></div>`;
 }

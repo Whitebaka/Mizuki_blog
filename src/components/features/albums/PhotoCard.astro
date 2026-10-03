@@ -1,6 +1,7 @@
 ---
 import { photoPresentation } from "@utils/album-images";
 import type { PhotoCardProps } from "./types";
+
 const photo = Astro.props as PhotoCardProps;
 const { alt = "", albumId, width, height } = photo;
 const images = photoPresentation(photo);

@@ -5,14 +5,17 @@ import type {
 	BookTemplate,
 	Photobook,
 } from "../../../types/photobook";
+import { imageSet } from "../../../utils/album-images";
 import {
 	applyProposal,
 	describeChanges,
 	validateBook,
 } from "../../../utils/photobook";
-import { imageSet } from "../../../utils/album-images";
+
 let { initial }: { initial: Photobook } = $props();
-const clone = <T,>(value: T): T => JSON.parse(JSON.stringify(value));
+function clone<T>(value: T): T {
+	return JSON.parse(JSON.stringify(value));
+}
 let book = $state<Photobook>(untrack(() => clone(initial)));
 let selected = $state(0);
 let past = $state<Photobook[]>([]);
@@ -184,8 +187,8 @@ function download(name: string, value: unknown) {
 	const blob = new Blob([JSON.stringify(value, null, 2) + "\n"], {
 		type: "application/json",
 	});
-	const url = URL.createObjectURL(blob),
-		a = document.createElement("a");
+	const url = URL.createObjectURL(blob);
+	const a = document.createElement("a");
 	a.href = url;
 	a.download = name;
 	a.click();

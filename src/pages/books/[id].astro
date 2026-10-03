@@ -1,8 +1,8 @@
 ---
 import MainGridLayout from "@layouts/MainGridLayout.astro";
 import Reader from "../../components/features/photobook/Reader.astro";
-import { loadBooks, previewBooks } from "../../utils/photobook-loader";
 import type { Photobook } from "../../types/photobook";
+import { loadBooks, previewBooks } from "../../utils/photobook-loader";
 import "../../styles/photobook.css";
 export function getStaticPaths() {
 	return loadBooks().map((book) => ({

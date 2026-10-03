@@ -1,9 +1,10 @@
 ---
 import { PageHeader } from "@components/features/page-header";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
-import { loadBooks, previewBooks } from "../../utils/photobook-loader";
 import { imageSet } from "../../utils/album-images";
+import { loadBooks, previewBooks } from "../../utils/photobook-loader";
 import "../../styles/photobook.css";
+
 const books = loadBooks();
 ---
 <MainGridLayout title="写真集" description="用章节、留白与照片，收藏一些片刻。">
