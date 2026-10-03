@@ -22,7 +22,9 @@
     "lint": "biome check ./src",
     "lint:fix": "biome check --write ./src",
     "preinstall": "npx only-allow pnpm",
-    "test:photobook": "node --experimental-strip-types --test tests/photobook.test.mjs"
+    "test:photobook": "node --experimental-strip-types --test tests/photobook.test.mjs",
+    "build:ci": "astro build && pagefind --site dist",
+    "test:ci": "pnpm test && pnpm test:photobook"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.9",
